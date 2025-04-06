@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.arrend_system.mapper.AddressMapper">
+
+    <resultMap id="BaseResultMap" type="com.arrend_system.pojo.entity.Address">
+            <id property="addressId" column="address_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="consignee" column="consignee" jdbcType="VARCHAR"/>
+            <result property="detailAddress" column="detail_address" jdbcType="VARCHAR"/>
+            <result property="area" column="area" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="label" column="label" jdbcType="VARCHAR"/>
+            <result property="defaultFlag" column="default_flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        address_id,user_id,consignee,
+        detail_address,area,phone,
+        label,default_flag
+    </sql>
+</mapper>
