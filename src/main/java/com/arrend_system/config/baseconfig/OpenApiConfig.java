@@ -26,7 +26,7 @@ public class OpenApiConfig {
                         // 开发者联系方式
                         .contact(new Contact().name("Uzhi").email("3277512331@qq.com")))
                 .externalDocs(new ExternalDocumentation()
-                        .description("限时秒杀系统接口")
+                        .description("跑腿系统")
                         .url("http://127.0.0.1:8080"));
     }
 
