@@ -1,6 +1,6 @@
 package com.arrend_system.config.baseconfig;
 
-// import com.arrend_system.config.filter.JwtAuthenticationTokenFilter;
+import com.arrend_system.config.filter.JwtAuthenticationTokenFilter;
 import com.arrend_system.service.impl.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

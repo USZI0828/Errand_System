@@ -5,24 +5,56 @@
 <mapper namespace="com.arrend_system.mapper.UserMapper">
 
     <resultMap id="userResultMap" type="com.arrend_system.pojo.entity.User">
-        <id column="u_id" property="userId"/>
+        <id column="user_id" property="userId"/>
         <collection property="permList" resultMap="permResultMap"/>
     </resultMap>
 
     <resultMap id="permResultMap" type="com.arrend_system.pojo.entity.Perm">
-        <id column="p_id" property="permId"/>
+        <id column="perm_id" property="permId"/>
     </resultMap>
 
     <select id="findUserByUsername" resultMap="userResultMap">
         select *
         from user
-        left join user_perm on user.u_id = user_perm.user_id
-        left join perm on perm.p_id = user_perm.perm_id
+        left join user_perm on user.user_id = user_perm.user_id
+        left join perm on perm.perm_id = user_perm.perm_id
         <where>
             <if test="username != null and username.trim() != ''">
                 AND user.username = #{username}
             </if>
         </where>
+    </select>
+
+    <resultMap id="userInfoVoResultMap" type="com.arrend_system.pojo.vo.UserInfoVo">
+        <id column="user_id" property="uId"/>
+        <result column="username" property="username"/>
+        <result column="email" property="email"/>
+        <result column="avatar" property="avatar"/>
+        <result column="sex" property="sex"/>
+        <result column="phone" property="phone"/>
+        <collection property="permList" ofType="com.arrend_system.pojo.entity.Perm">
+            <id column="perm_id" property="permId"/>
+            <result column="perm_target" property="permTarget"/>
+            <result column="perm_detail" property="permDetail"/>
+        </collection>
+    </resultMap>
+
+    <select id="findUserByEmail" resultMap="userInfoVoResultMap">
+        select u.user_id,u.username, u.email, u.avatar, u.phone,u.sex,
+               p.perm_id, p.perm_target, p.perm_detail
+        from user u
+                 left join user_perm up on u.user_id = up.user_id
+                 left join perm p on up.perm_id = p.perm_id
+        where u.email = #{email}
+    </select>
+
+    <select id="findUserById" resultMap="userInfoVoResultMap">
+        select u.user_id,u.username, u.email, u.avatar, u.phone, u.sex,
+               p.perm_id, p.perm_target, p.perm_detail
+        from user u
+                 left join user_perm up on u.user_id = up.user_id
+                 left join perm p on up.perm_id = p.perm_id
+        where u.user_id = #{userId}
     </select>
 
 </mapper>

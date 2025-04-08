@@ -1,8 +1,11 @@
 package com.arrend_system.mapper;
 
 import com.arrend_system.pojo.entity.User;
+import com.arrend_system.pojo.vo.UserInfoVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 /**
 * @author 张明阳
@@ -13,6 +16,9 @@ import org.springframework.data.repository.query.Param;
 public interface UserMapper extends BaseMapper<User> {
     User findUserByUsername(@Param("username") String username);
 
+    UserInfoVo findUserByEmail(@Param("email") String email);
+
+    UserInfoVo findUserById(@Param("userId")Integer userId);
 }
 
 
