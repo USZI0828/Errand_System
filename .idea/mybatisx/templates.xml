@@ -69,44 +69,8 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="Address" />
-                  <option name="tableName" value="address" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Notice" />
-                  <option name="tableName" value="notice" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Goods" />
-                  <option name="tableName" value="goods" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="ArrendType" />
-                  <option name="tableName" value="arrend_type" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Comment" />
-                  <option name="tableName" value="comment" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Perm" />
-                  <option name="tableName" value="perm" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Orders" />
-                  <option name="tableName" value="orders" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Shop" />
-                  <option name="tableName" value="shop" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="User" />
-                  <option name="tableName" value="user" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="UserPerm" />
-                  <option name="tableName" value="user_perm" />
+                  <option name="className" value="Secret" />
+                  <option name="tableName" value="secret" />
                 </TableUIInfo>
               </list>
             </option>
