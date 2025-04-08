@@ -5,12 +5,18 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.math.BigDecimal;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 
  * @TableName address
  */
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName(value ="address")
 @Data
 public class Address implements Serializable {
@@ -57,10 +63,22 @@ public class Address implements Serializable {
     private String label;
 
     /**
-     * 删除标志位
+     * 默认地址标志位
      */
     @TableField(value = "default_flag")
     private Integer defaultFlag;
+
+    /**
+     * 经度
+     */
+    @TableField(value = "longitude")
+    private BigDecimal Longitude;
+
+    /**
+     * 纬度
+     */
+    @TableField(value = "latitude")
+    private BigDecimal Latitude;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -4,27 +4,57 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.arrend_system.mapper.OrdersMapper">
 
-    <resultMap id="BaseResultMap" type="com.arrend_system.pojo.entity.Orders">
-            <id property="orderId" column="order_id" jdbcType="INTEGER"/>
-            <result property="title" column="title" jdbcType="VARCHAR"/>
-            <result property="orderType" column="order_type" jdbcType="VARCHAR"/>
-            <result property="addressId" column="address_id" jdbcType="INTEGER"/>
-            <result property="position" column="position" jdbcType="VARCHAR"/>
-            <result property="cost" column="cost" jdbcType="DECIMAL"/>
-            <result property="publisher" column="publisher" jdbcType="INTEGER"/>
-            <result property="orderTaker" column="order_taker" jdbcType="INTEGER"/>
-            <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="finishTime" column="finish_time" jdbcType="TIMESTAMP"/>
-            <result property="itemId" column="item_id" jdbcType="INTEGER"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
+    <resultMap id="OrdersResultMap" type="com.arrend_system.pojo.entity.Orders">
+            <id property="orderId" column="order_id"/>
+            <result property="title" column="title"/>
+            <result property="orderType" column="order_type"/>
+            <result property="addressId" column="address_id"/>
+            <result property="position" column="position"/>
+            <result property="cost" column="cost"/>
+            <result property="publisher" column="publisher"/>
+            <result property="orderTaker" column="order_taker"/>
+            <result property="status" column="status"/>
+            <result property="createTime" column="create_time"/>
+            <result property="finishTime" column="finish_time"/>
+            <result property="itemId" column="item_id"/>
+            <result property="description" column="description"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        order_id,title,order_type,
-        address_id,position,cost,
-        publisher,order_taker,status,
-        create_time,finish_time,item_id,
-        description
-    </sql>
+        <select id="queryOrderList" resultType="com.arrend_system.pojo.vo.OrdersVo">
+                select o.order_id, o.title, t.type_name as order_type,
+                a.address_id, a.user_id, a.consignee, a.detail_address, a.area, a.phone, a.label, a.longitude, a.latitude,
+                o.position, o.cost, o.order_taker, o.status, o.create_time, o.finish_time,
+                g.item_id, g.item_name, g.description as item_desc, g.price, g.unit, g.stock, g.shop_id, g.img, g.sales
+                from orders o
+                left join address a on o.address_id = a.address_id
+                left join arrend_type t on o.order_type = t.type_id
+                left join goods g on o.item_id = g.item_id
+                <where>
+                        <if test="query.title != null and query.title != ''">
+                                and o.title like concat('%', #{query.title}, '%')
+                        </if>
+                        <if test="query.orderType != null and query.orderType != ''">
+                                and o.order_type = #{query.orderType}
+                        </if>
+                        <if test="query.addressId != null and query.addressId != ''">
+                                and o.address_id = #{query.addressId}
+                        </if>
+                        <if test="query.mincost != null and query.mincost != ''">
+                                and o.cost &gt;= #{query.mincost}
+                        </if>
+                        <if test="query.maxcost != null and query.maxcost != ''">
+                                and o.cost &lt;= #{query.maxcost}
+                        </if>
+                        <if test="query.status != null and query.status != ''">
+                                and o.status = #{query.status}
+                        </if>
+                        <if test="query.startTime != null and query.startTime != ''">
+                                and o.create_time &gt;= #{query.startTime}
+                        </if>
+                        <if test="query.endTime != null and query.endTime != ''">
+                                and o.create_time &lt;= #{query.endTime}
+                        </if>
+                </where>
+        </select>
+
 </mapper>

@@ -1,6 +1,9 @@
 package com.arrend_system.service;
 
+import com.arrend_system.common.Result;
 import com.arrend_system.pojo.entity.Orders;
+import com.arrend_system.pojo.form.add.AddOrderForm;
+import com.arrend_system.pojo.query.OrdersQuery;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +13,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface OrdersService extends IService<Orders> {
 
+    Result<?> publish(AddOrderForm addOrderForm);
+
+    Result<?> getList(OrdersQuery ordersQuery);
+
+    Result<?> cancelArrend(Integer ordersId);
 }

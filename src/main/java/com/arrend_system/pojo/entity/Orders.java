@@ -6,13 +6,19 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 
  * @TableName orders
  */
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName(value ="orders")
 @Data
 public class Orders implements Serializable {
@@ -32,7 +38,7 @@ public class Orders implements Serializable {
      * 跑腿类型
      */
     @TableField(value = "order_type")
-    private String orderType;
+    private Integer orderType;
 
     /**
      * 收货地址id
@@ -74,13 +80,13 @@ public class Orders implements Serializable {
      * 发布时间
      */
     @TableField(value = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 完成时间
      */
     @TableField(value = "finish_time")
-    private Date finishTime;
+    private LocalDateTime finishTime;
 
     /**
      * 商品id
