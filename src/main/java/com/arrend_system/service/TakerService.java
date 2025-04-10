@@ -11,7 +11,7 @@ public interface TakerService extends IService<User> {
     List<Orders> getUnChooseOrders();
 
 
-    String chooseOrders(Integer order_id, Integer order_taker, Integer status);
+    String chooseOrders(Integer order_id, Integer order_taker);
 
     String getChoseOrders(Integer orderTaker);
 
