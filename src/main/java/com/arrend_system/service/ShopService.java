@@ -1,5 +1,6 @@
 package com.arrend_system.service;
 
+import com.arrend_system.pojo.entity.Goods;
 import com.arrend_system.pojo.entity.Orders;
 import com.arrend_system.pojo.entity.Shop;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -12,9 +13,17 @@ import java.util.List;
 * @createDate 2025-04-06 12:14:15
 */
 public interface ShopService extends IService<Shop> {
-    String addGoods(Shop shop);
+    String addGoods(Goods good, String imagePath);
 
-    String updateGoods(Shop shop);
+    String updateShop(Shop shop);
 
-    List<Orders> getOrders(Integer shopId);
+    List<Orders> getAllOrders(Integer shopId);
+
+    List<Orders> getWaitingOrders(Integer shopId);
+
+    List<Orders> getFinishedOrders(Integer shopId);
+
+    List<Orders> getGoingOrders(Integer shopId);
+
+    String deleteGood(Integer itemId);
 }

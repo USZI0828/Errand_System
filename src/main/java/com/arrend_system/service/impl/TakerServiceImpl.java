@@ -29,10 +29,10 @@ public class TakerServiceImpl extends ServiceImpl<TakerMapper, User> implements 
     }
 
     @Override
-    public String chooseOrders(Integer order_id, Integer order_taker, Integer status) {
+    public String chooseOrders(Integer order_id, Integer order_taker) {
         Orders orders = ordersMapper.selectById(order_id);
         orders.setOrderTaker(order_taker);
-        orders.setStatus(status);
+        orders.setStatus(2);
         ordersMapper.updateById(orders);
         return "接取订单成功";
     }

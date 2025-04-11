@@ -24,9 +24,8 @@ public class TakerController {
     // 接取订单
     @PutMapping("/chooseOrders/{order_id}")
     public String chooseOrders(@PathVariable Integer order_id,
-                               @PathVariable Integer order_taker,
-                               @RequestParam("status") Integer status) {
-        return takerService.chooseOrders(order_id, order_taker, status);
+                               @PathVariable Integer order_taker) {
+        return takerService.chooseOrders(order_id, order_taker);
     }
 
     // 查询自己接取的订单

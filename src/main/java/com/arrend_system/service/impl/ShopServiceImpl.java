@@ -36,19 +36,20 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop>
     private GoodsMapper goodsMapper;
 
     @Override
-    public String addGoods(Shop shop) {
-        shopMapper.insert(shop);
+    public String addGoods(Goods good, String imagePath) {
+        good.setImg(imagePath);
+        goodsMapper.insert(good);
         return "添加商品成功";
     }
 
     @Override
-    public String updateGoods(Shop shop) {
+    public String updateShop(Shop shop) {
         shopMapper.updateById(shop);
         return "修改商品信息成功";
     }
 
     @Override
-    public List<Orders> getOrders(Integer shopId) {
+    public List<Orders> getAllOrders(Integer shopId) {
         // 先查询该商店的商品
         LambdaQueryWrapper<Goods> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Goods::getShopId, shopId);
@@ -73,6 +74,86 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop>
                 .filter(order -> order.getStatus() != 0)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Orders> getWaitingOrders(Integer shopId) {
+        LambdaQueryWrapper<Goods> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Goods::getShopId, shopId);
+        List<Goods> goods = goodsMapper.selectList(lqw);
+
+        if (CollectionUtils.isEmpty(goods)) {
+            return new ArrayList<>();
+        }
+
+        List<Integer> itemIds = goods.stream()
+                .map(Goods::getItemId)
+                .collect(Collectors.toList());
+
+        LambdaQueryWrapper<Orders> lqwOrders = new LambdaQueryWrapper<>();
+        lqwOrders.in(Orders::getItemId, itemIds);
+        List<Orders> allOrders = ordersMapper.selectList(lqwOrders);
+
+        // 筛选待接单订单
+        return allOrders.stream()
+                .filter(order -> order.getStatus() == 1)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Orders> getGoingOrders(Integer shopId) {
+        LambdaQueryWrapper<Goods> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Goods::getShopId, shopId);
+        List<Goods> goods = goodsMapper.selectList(lqw);
+
+        if (CollectionUtils.isEmpty(goods)) {
+            return new ArrayList<>();
+        }
+
+        List<Integer> itemIds = goods.stream()
+                .map(Goods::getItemId)
+                .collect(Collectors.toList());
+
+        LambdaQueryWrapper<Orders> lqwOrders = new LambdaQueryWrapper<>();
+        lqwOrders.in(Orders::getItemId, itemIds);
+        List<Orders> allOrders = ordersMapper.selectList(lqwOrders);
+
+        // 筛选进行中订单
+        return allOrders.stream()
+                .filter(order -> order.getStatus() == 2)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String deleteGood(Integer itemId) {
+        goodsMapper.deleteById(itemId);
+        return "商品已下架";
+    }
+
+    @Override
+    public List<Orders> getFinishedOrders(Integer shopId) {
+        LambdaQueryWrapper<Goods> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Goods::getShopId, shopId);
+        List<Goods> goods = goodsMapper.selectList(lqw);
+
+        if (CollectionUtils.isEmpty(goods)) {
+            return new ArrayList<>();
+        }
+
+        List<Integer> itemIds = goods.stream()
+                .map(Goods::getItemId)
+                .collect(Collectors.toList());
+
+        LambdaQueryWrapper<Orders> lqwOrders = new LambdaQueryWrapper<>();
+        lqwOrders.in(Orders::getItemId, itemIds);
+        List<Orders> allOrders = ordersMapper.selectList(lqwOrders);
+
+        // 筛选已完成订单
+        return allOrders.stream()
+                .filter(order -> order.getStatus() == 3)
+                .collect(Collectors.toList());
+    }
+
+
 }
 
 
