@@ -37,68 +37,68 @@ public class ShopController {
 
     // 修改商店信息
     @PutMapping("/updateShop")
-    public String updateShop(@RequestBody Shop shop) {
+    public Result<?> updateShop(@RequestBody Shop shop) {
         return shopService.updateShop(shop);
     }
 
     // 查询全部订单
     @GetMapping("/getAllOrders")
-    public List<Orders> getAllOrders(@PathVariable Integer shop_id) {
+    public Result<?> getAllOrders(@PathVariable Integer shop_id) {
         return shopService.getAllOrders(shop_id);
     }
 
     // 查询待接单订单
     @GetMapping("/getWaitingOrders")
-    public List<Orders> getWaitingOrders(@PathVariable Integer shop_id) {
+    public Result<?> getWaitingOrders(@PathVariable Integer shop_id) {
         return shopService.getWaitingOrders(shop_id);
     }
 
     // 查询进行中订单
     @GetMapping("/getGoingOrders")
-    public List<Orders> getGoingOrders(@PathVariable Integer shop_id) {
+    public Result<?> getGoingOrders(@PathVariable Integer shop_id) {
         return shopService.getGoingOrders(shop_id);
     }
 
     // 查询已完成订单
     @GetMapping("/getFinishedOrders")
-    public List<Orders> getFinishedOrders(@PathVariable Integer shop_id) {
+    public Result<?> getFinishedOrders(@PathVariable Integer shop_id) {
         return shopService.getFinishedOrders(shop_id);
     }
 
     // 查询全部商品
     @GetMapping("/getAllGoods")
-    public List<Goods> getAllGoods(@PathVariable Integer shop_id) {
+    public Result<?> getAllGoods(@PathVariable Integer shop_id) {
         return goodsService.getAllGoods(shop_id);
     }
 
     // 查询库存还有的商品
     @GetMapping("/getSaleGoods")
-    public List<Goods> getSaleGoods(@PathVariable Integer shop_id) {
+    public Result<?> getSaleGoods(@PathVariable Integer shop_id) {
         return goodsService.getSaleGoods(shop_id);
     }
 
-    // 查询库存还有的商品
+    // 查询库存没有的商品
     @GetMapping("/getSoldOutGoods")
-    public List<Goods> getSoldOutGoods(@PathVariable Integer shop_id) {
+    public Result<?> getSoldOutGoods(@PathVariable Integer shop_id) {
         return goodsService.getSoldOutGoods(shop_id);
     }
 
 
     // 添加商品
-    @PostMapping
-    public String addGoods(@RequestBody Goods good, String imagePath) {
-        return shopService.addGoods(good, imagePath);
+    @PostMapping("/addGoods")
+    public Result<?> addGoods(@RequestBody Goods good, String imagePath) {
+        return goodsService.addGoods(good, imagePath);
     }
 
     // 下架商品
     @DeleteMapping("/{item_id}")
-    public String deleteGoods(@PathVariable Integer item_id) {
-        return shopService.deleteGood(item_id);
+    public Result<?> deleteGoods(@PathVariable Integer item_id) {
+        return goodsService.deleteGood(item_id);
     }
 
     // 更改商品信息
     @PutMapping("/{item_id}")
-    public String updateGood(@PathVariable Integer item_id, @RequestBody Goods good, String imgPath) {
+    public Result<?> updateGood(@PathVariable Integer item_id, @RequestBody Goods good, String imgPath) {
         return goodsService.updateGood(item_id, good, imgPath);
     }
 

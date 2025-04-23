@@ -1,11 +1,9 @@
 package com.arrend_system.service;
 
+import com.arrend_system.common.Result;
 import com.arrend_system.pojo.entity.Goods;
-import com.arrend_system.pojo.entity.Orders;
 import com.arrend_system.pojo.entity.Shop;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
 
 /**
 * @author 张明阳
@@ -13,17 +11,15 @@ import java.util.List;
 * @createDate 2025-04-06 12:14:15
 */
 public interface ShopService extends IService<Shop> {
-    String addGoods(Goods good, String imagePath);
 
-    String updateShop(Shop shop);
+    Result<?> updateShop(Shop shop);
 
-    List<Orders> getAllOrders(Integer shopId);
+    Result<?> getAllOrders(Integer shopId);
 
-    List<Orders> getWaitingOrders(Integer shopId);
+    Result<?> getWaitingOrders(Integer shopId);
 
-    List<Orders> getFinishedOrders(Integer shopId);
+    Result<?> getFinishedOrders(Integer shopId);
 
-    List<Orders> getGoingOrders(Integer shopId);
+    Result<?> getGoingOrders(Integer shopId);
 
-    String deleteGood(Integer itemId);
 }
