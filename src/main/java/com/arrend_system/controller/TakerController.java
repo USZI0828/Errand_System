@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/{order_taker}")
+@RequestMapping("/taker")
 public class TakerController {
 
     @Autowired

@@ -5,6 +5,7 @@ import com.arrend_system.pojo.vo.UserInfoVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -18,7 +19,9 @@ public interface UserMapper extends BaseMapper<User> {
 
     UserInfoVo findUserByEmail(@Param("email") String email);
 
-    UserInfoVo findUserById(@Param("userId")Integer userId);
+    UserInfoVo findUserByName(@Param("userName")String userName);
+
+    BigDecimal findCountById(@Param("userId") Integer publisher);
 }
 
 

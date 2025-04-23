@@ -1,17 +1,25 @@
 package com.arrend_system.controller;
 
+import com.arrend_system.common.Result;
+import com.arrend_system.config.baseconfig.MinioConfig;
 import com.arrend_system.pojo.entity.Goods;
 import com.arrend_system.pojo.entity.Orders;
 import com.arrend_system.pojo.entity.Shop;
 import com.arrend_system.service.GoodsService;
 import com.arrend_system.service.ShopService;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/{shop_id}")
+@RequestMapping("/shop")
 public class ShopController {
 
     @Autowired
@@ -19,6 +27,13 @@ public class ShopController {
 
     @Autowired
     GoodsService goodsService;
+
+
+    @Autowired
+    private MinioConfig minioConfig;
+
+    @Autowired
+    private MinioClient minioClient;
 
     // 修改商店信息
     @PutMapping("/updateShop")
@@ -85,6 +100,49 @@ public class ShopController {
     @PutMapping("/{item_id}")
     public String updateGood(@PathVariable Integer item_id, @RequestBody Goods good, String imgPath) {
         return goodsService.updateGood(item_id, good, imgPath);
+    }
+
+    @Operation(summary = "上传文件")
+    @PostMapping("/upload")
+    public Result<?> uploadFile(@RequestParam("file") MultipartFile[] files) {
+        if (files == null || files.length == 0) {
+            return Result.fail(400, "文件为空", null);
+        }
+
+        List<String> urls = new ArrayList<>(); // 用于存储每个文件的 URL
+        String bucketName = minioConfig.getBucketName();
+
+        try {
+            for (MultipartFile file : files) {
+                if (file == null || file.getSize() == 0) {
+                    continue; // 跳过空文件
+                }
+
+                // 生成唯一文件名
+                String objectName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+                // 上传文件到 MinIO
+                minioClient.putObject(PutObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(objectName)
+                        .stream(file.getInputStream(), file.getSize(), -1)
+                        .contentType(file.getContentType())
+                        .build());
+
+                // 生成固定 URL
+                String url = minioConfig.getEndpoint() + "/" + bucketName + "/" + objectName;
+                urls.add(url); // 添加 URL 到列表中
+            }
+
+            if (urls.isEmpty()) {
+                return Result.fail(400, "所有文件均为空或上传失败", null);
+            }
+
+            return Result.success(urls); // 返回所有文件的 URL
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.fail(500, "上传失败", null);
+        }
     }
 
 }

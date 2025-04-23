@@ -1,14 +1,24 @@
 package com.arrend_system.service.impl;
 
+import com.arrend_system.common.Result;
+import com.arrend_system.config.baseconfig.MinioConfig;
 import com.arrend_system.pojo.entity.Goods;
 import com.arrend_system.mapper.GoodsMapper;
 import com.arrend_system.service.GoodsService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -19,6 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
     implements GoodsService {
+
 
     @Autowired
     private GoodsMapper goodsMapper;
@@ -56,6 +67,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
         goodsMapper.updateById(good);
         return "编辑成功";
     }
+
+
 
 
 }

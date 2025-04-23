@@ -17,9 +17,6 @@ public class OrdersController {
     @Autowired
     private OrdersService ordersService;
 
-    @Autowired
-    private CommentMapper commentMapper;
-
     //用户发布跑腿任务
     @Operation(summary = "用户发布跑腿任务")
     @PostMapping("/publish")

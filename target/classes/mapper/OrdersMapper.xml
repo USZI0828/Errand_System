@@ -16,19 +16,16 @@
             <result property="status" column="status"/>
             <result property="createTime" column="create_time"/>
             <result property="finishTime" column="finish_time"/>
-            <result property="itemId" column="item_id"/>
             <result property="description" column="description"/>
     </resultMap>
 
         <select id="queryOrderList" resultType="com.arrend_system.pojo.vo.OrdersVo">
                 select o.order_id, o.title, t.type_name as order_type,
                 a.address_id, a.user_id, a.consignee, a.detail_address, a.area, a.phone, a.label, a.longitude, a.latitude,
-                o.position, o.cost, o.order_taker, o.status, o.create_time, o.finish_time,
-                g.item_id, g.item_name, g.description as item_desc, g.price, g.unit, g.stock, g.shop_id, g.img, g.sales
+                o.position, o.cost, o.order_taker, o.status, o.create_time, o.finish_time
                 from orders o
                 left join address a on o.address_id = a.address_id
                 left join arrend_type t on o.order_type = t.type_id
-                left join goods g on o.item_id = g.item_id
                 <where>
                         <if test="query.title != null and query.title != ''">
                                 and o.title like concat('%', #{query.title}, '%')

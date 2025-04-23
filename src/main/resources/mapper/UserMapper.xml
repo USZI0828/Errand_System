@@ -32,6 +32,9 @@
         <result column="avatar" property="avatar"/>
         <result column="sex" property="sex"/>
         <result column="phone" property="phone"/>
+        <result column="name" property="name"/>
+        <result column="count" property="count"/>
+        <result column="id_number" property="idNumber"/>
         <collection property="permList" ofType="com.arrend_system.pojo.entity.Perm">
             <id column="perm_id" property="permId"/>
             <result column="perm_target" property="permTarget"/>
@@ -40,7 +43,7 @@
     </resultMap>
 
     <select id="findUserByEmail" resultMap="userInfoVoResultMap">
-        select u.user_id,u.username, u.email, u.avatar, u.phone,u.sex,
+        select u.user_id,u.username, u.email, u.avatar, u.phone,u.sex,u.name,u.count,u.id_number,
                p.perm_id, p.perm_target, p.perm_detail
         from user u
                  left join user_perm up on u.user_id = up.user_id
@@ -48,13 +51,17 @@
         where u.email = #{email}
     </select>
 
-    <select id="findUserById" resultMap="userInfoVoResultMap">
-        select u.user_id,u.username, u.email, u.avatar, u.phone, u.sex,
+    <select id="findUserByName" resultMap="userInfoVoResultMap">
+        select u.user_id,u.username, u.email, u.avatar, u.phone, u.sex,u.name,u.count,u.id_number,
                p.perm_id, p.perm_target, p.perm_detail
         from user u
                  left join user_perm up on u.user_id = up.user_id
                  left join perm p on up.perm_id = p.perm_id
-        where u.user_id = #{userId}
+        where u.username = #{userName}
+    </select>
+    <select id="findCountById" resultType="java.math.BigDecimal">
+        select user.count
+        where user.user_id = #{userId}
     </select>
 
 </mapper>

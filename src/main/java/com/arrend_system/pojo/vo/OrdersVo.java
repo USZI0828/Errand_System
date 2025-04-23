@@ -2,9 +2,6 @@ package com.arrend_system.pojo.vo;
 
 import com.arrend_system.pojo.entity.Address;
 import com.arrend_system.pojo.entity.Goods;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,12 +14,12 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrdersVo{
-    private Integer orderId;
+public class OrdersVo{    private Integer orderId;
     private String title;
     private String orderType;
     private Address address;
@@ -38,6 +35,6 @@ public class OrdersVo{
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime finishTime;
-    private Goods item;
+    private List<Goods> itemList;
     private String description;
 }

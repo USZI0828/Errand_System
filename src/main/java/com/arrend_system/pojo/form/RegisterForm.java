@@ -8,4 +8,5 @@ public class RegisterForm {
     private String password;
     private String email;
     private String code;
+    private Integer permId;
 }

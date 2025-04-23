@@ -10,10 +10,12 @@ import com.arrend_system.service.ShopService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.simpleframework.xml.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,10 +66,8 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop>
                 .map(Goods::getItemId)
                 .collect(Collectors.toList());
 
-        // 使用 in 条件批量查询订单
-        LambdaQueryWrapper<Orders> lqwOrders = new LambdaQueryWrapper<>();
-        lqwOrders.in(Orders::getItemId, itemIds);
-        List<Orders> allOrders = ordersMapper.selectList(lqwOrders);
+        // 批量查询订单
+        List<Orders> allOrders = selectOrdersByItemIds(itemIds,ordersMapper);
 
         // 筛选出状态不为 0 的订单
         return allOrders.stream()
@@ -89,9 +89,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop>
                 .map(Goods::getItemId)
                 .collect(Collectors.toList());
 
-        LambdaQueryWrapper<Orders> lqwOrders = new LambdaQueryWrapper<>();
-        lqwOrders.in(Orders::getItemId, itemIds);
-        List<Orders> allOrders = ordersMapper.selectList(lqwOrders);
+        List<Orders> allOrders = selectOrdersByItemIds(itemIds,ordersMapper);
 
         // 筛选待接单订单
         return allOrders.stream()
@@ -113,9 +111,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop>
                 .map(Goods::getItemId)
                 .collect(Collectors.toList());
 
-        LambdaQueryWrapper<Orders> lqwOrders = new LambdaQueryWrapper<>();
-        lqwOrders.in(Orders::getItemId, itemIds);
-        List<Orders> allOrders = ordersMapper.selectList(lqwOrders);
+        List<Orders> allOrders = selectOrdersByItemIds(itemIds,ordersMapper);
 
         // 筛选进行中订单
         return allOrders.stream()
@@ -143,14 +139,26 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop>
                 .map(Goods::getItemId)
                 .collect(Collectors.toList());
 
-        LambdaQueryWrapper<Orders> lqwOrders = new LambdaQueryWrapper<>();
-        lqwOrders.in(Orders::getItemId, itemIds);
-        List<Orders> allOrders = ordersMapper.selectList(lqwOrders);
+        List<Orders> allOrders = selectOrdersByItemIds(itemIds,ordersMapper);
 
         // 筛选已完成订单
         return allOrders.stream()
                 .filter(order -> order.getStatus() == 3)
                 .collect(Collectors.toList());
+    }
+
+    public static List<Orders> selectOrdersByItemIds(List<Integer> itemIds, OrdersMapper ordersMapper) {
+        if (CollectionUtils.isEmpty(itemIds)) {
+            return new ArrayList<>();
+        }
+
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
+
+        for (Integer itemId : itemIds) {
+            queryWrapper.or(i -> i.apply("FIND_IN_SET({0}, items)", itemId));
+        }
+
+        return ordersMapper.selectList(queryWrapper);
     }
 
 

@@ -27,7 +27,7 @@ public class OpenApiConfig {
                         .contact(new Contact().name("Uzhi").email("3277512331@qq.com")))
                 .externalDocs(new ExternalDocumentation()
                         .description("跑腿系统")
-                        .url("http://127.0.0.1:8080"));
+                        .url("http://127.0.0.1:8088"));
     }
 
     @Bean

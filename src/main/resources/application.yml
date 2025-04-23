@@ -57,3 +57,10 @@ knife4j:
   setting:
     language: zh_cn
     swagger-model-name: ???
+
+#minio 文件配置
+minio:
+  endpoint: http://124.71.33.238:9000
+  access-key: admin
+  secret-key: password
+  bucket-name: sale
