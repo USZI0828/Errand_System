@@ -72,13 +72,13 @@ public class Address implements Serializable {
      * 经度
      */
     @TableField(value = "longitude")
-    private BigDecimal Longitude;
+    private BigDecimal longitude;
 
     /**
      * 纬度
      */
     @TableField(value = "latitude")
-    private BigDecimal Latitude;
+    private BigDecimal latitude;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

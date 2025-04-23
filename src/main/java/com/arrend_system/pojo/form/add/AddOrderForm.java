@@ -21,6 +21,6 @@ public class AddOrderForm {
     private Integer status;
     private LocalDateTime createTime;
     private LocalDateTime finishTime;
-    private Integer itemId;
+    private String itemList;
     private String description;
 }

@@ -91,8 +91,8 @@ public class Orders implements Serializable {
     /**
      * 商品id
      */
-    @TableField(value = "item_id")
-    private Integer itemId;
+    @TableField(value = "items")
+    private String items;
 
     /**
      * 跑腿内容描述

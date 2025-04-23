@@ -24,8 +24,8 @@ public class SecurityConfig {
     @Autowired
     private UserDetailServiceImpl userDetailServiceImpl;
 
-    // @Autowired
-    // private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    @Autowired
+    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
         );
         //自定义校验的数学，优先使用jwt拦截器，再使用UsernamePasswordAuthenticationFilter
-        // httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 }

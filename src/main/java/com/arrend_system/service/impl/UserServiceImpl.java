@@ -1,8 +1,14 @@
 package com.arrend_system.service.impl;
 
 import com.arrend_system.common.Result;
+import com.arrend_system.exception.UserException.CodeExpiredException;
+import com.arrend_system.exception.UserException.EmailUsedException;
+import com.arrend_system.exception.UserException.UserDeletedException;
+import com.arrend_system.exception.UserException.UserExitedException;
+import com.arrend_system.mapper.UserPermMapper;
 import com.arrend_system.pojo.entity.User;
 import com.arrend_system.mapper.UserMapper;
+import com.arrend_system.pojo.entity.UserPerm;
 import com.arrend_system.pojo.form.LoginForm;
 import com.arrend_system.pojo.form.RegisterForm;
 import com.arrend_system.pojo.vo.UserInfoVo;
@@ -59,6 +65,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Autowired
     private JavaMailSender mailSender;
 
+    @Autowired
+    private UserPermMapper upMapper;
+
     @Override
     public Result<?> login(LoginForm loginForm) throws JsonProcessingException {
         //将用户名和密码存入authenticationToekn中，调用authenticate方法验证
@@ -68,6 +77,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         User user = (User)authentication.getPrincipal();
         if (user.getDeleteFlag() == 1) {
             //用户已经被删除
+            throw new UserDeletedException();
         }
         String userInfo_ky = "user_" + user.getUsername();
         String userInfo = JsonUtil.serialize(user);
@@ -81,7 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         UserInfoVo user = userMapper.findUserByEmail(email);
         if (user != null) {
             //邮箱已经被使用
-
+            throw new EmailUsedException();
         }
         //生成四位验证码
         String code = EmailCodeUtil.generateCode();
@@ -115,10 +125,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         User user = userMapper.findUserByUsername(registerForm.getUsername());
         if (user != null) {
             //用户已存在
+            throw new UserExitedException();
         }
         String code = redisTemplate.opsForValue().get("email_" + registerForm.getEmail());
         if (code == null) {
             //验证码过期
+            throw new CodeExpiredException();
         }
         //检查验证码是否正确
         if (code.equals(registerForm.getCode())) {
@@ -126,15 +138,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             User newUser = new User(registerForm.getUsername(),
                     passwordEncoder.encode(registerForm.getPassword()),
                     registerForm.getEmail());
+            userMapper.insert(newUser);
+            UserPerm up = new UserPerm(null, newUser.getUserId(), registerForm.getPermId());
+            upMapper.insert(up);
             return Result.success("注册成功");
         }
         return Result.fail(300,"验证码错误",null);
     }
 
     @Override
-    public Result<?> getUserInfo(Integer userId) {
-        UserInfoVo user = userMapper.findUserById(userId);
-        return Result.success(user);
+    public Result<?> getUserInfo(String userName) {
+        UserInfoVo userInfo = userMapper.findUserByName(userName);
+        return Result.success(userInfo);
     }
 }
 

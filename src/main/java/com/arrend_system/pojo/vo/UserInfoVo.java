@@ -15,5 +15,8 @@ public class UserInfoVo {
     private String email;
     private String avatar;
     private String phone;
+    private String name;
+    private String count;
+    private String idNumber;
     private List<Perm> permList = new ArrayList<>();
 }

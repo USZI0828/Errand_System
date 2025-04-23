@@ -20,5 +20,5 @@ public interface UserService extends IService<User> {
 
     Result<?> register(RegisterForm registerForm);
 
-    Result<?> getUserInfo(Integer userId);
+    Result<?> getUserInfo(String userName);
 }

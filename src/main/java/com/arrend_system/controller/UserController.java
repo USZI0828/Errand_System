@@ -37,8 +37,8 @@ public class UserController {
 
     @Operation(summary = "查看个人信息")
     @GetMapping("/getUserInfo")
-    public Result<?> getUserInfo(@RequestParam("userId")Integer userId) {
-        return userService.getUserInfo(userId);
+    public Result<?> getUserInfo(@RequestParam("userName")String userName) {
+        return userService.getUserInfo(userName);
     }
 
 
