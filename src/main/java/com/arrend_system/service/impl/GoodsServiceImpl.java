@@ -8,7 +8,9 @@ import com.arrend_system.pojo.entity.Goods;
 import com.arrend_system.mapper.GoodsMapper;
 import com.arrend_system.service.GoodsService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,33 +33,44 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
 
     @Override
     public Result<?> getAllGoods(Integer shopId) {
+        Page<Goods> page = new Page<>(1, 10);
+
+        // 构建查询条件，筛选出指定商店 ID 的商品
         LambdaQueryWrapper<Goods> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Goods::getShopId, shopId);
-        List<Goods> goodsList = goodsMapper.selectList(queryWrapper);
-        return Result.success(goodsList);
+
+        // 执行分页查询
+        IPage<Goods> goodsPage = goodsMapper.selectPage(page, queryWrapper);
+
+        return Result.success(goodsPage);
     }
 
     @Override
     public Result<?> getSaleGoods(Integer shopId) {
+        Page<Goods> page = new Page<>(1, 10);
+
+        // 构建查询条件，筛选出指定商店 ID 的商品
         LambdaQueryWrapper<Goods> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Goods::getShopId, shopId);
-        List<Goods> goods = goodsMapper.selectList(queryWrapper);
-        // 筛选库存不为0的商品
-        List<Goods> goodsList = goods.stream()
-                .filter(order -> order.getStock() != 0)
-                .collect(Collectors.toList());
-        return Result.success(goodsList);
+        queryWrapper.eq(Goods::getShopId, shopId).gt(Goods::getStock, 0);
+
+        // 执行分页查询
+        IPage<Goods> goodsPage = goodsMapper.selectPage(page, queryWrapper);
+
+        return Result.success(goodsPage);
     }
 
     @Override
     public Result<?> getSoldOutGoods(Integer shopId) {
+        Page<Goods> page = new Page<>(1, 10);
+
+        // 构建查询条件，筛选出指定商店 ID 且库存为 0 的商品
         LambdaQueryWrapper<Goods> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Goods::getShopId, shopId);
-        List<Goods> goods = goodsMapper.selectList(queryWrapper);
-        List<Goods> goodsList = goods.stream()
-                .filter(order -> order.getStock() == 0)
-                .collect(Collectors.toList());
-        return Result.success(goodsList);
+        queryWrapper.eq(Goods::getShopId, shopId).eq(Goods::getStock, 0);
+
+        // 执行分页查询
+        IPage<Goods> goodsPage = goodsMapper.selectPage(page, queryWrapper);
+
+        return Result.success(goodsPage);
     }
 
     @Override
