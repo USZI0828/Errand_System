@@ -1,24 +1,21 @@
 package com.arrend_system.service.impl;
 
 import com.arrend_system.common.Result;
-import com.arrend_system.config.baseconfig.MinioConfig;
+import com.arrend_system.exception.ShopException.ShopException;
+import com.arrend_system.exception.ShopException.ShopNoGoodException;
+import com.arrend_system.exception.ShopException.ShopNoOrderException;
 import com.arrend_system.pojo.entity.Goods;
 import com.arrend_system.mapper.GoodsMapper;
 import com.arrend_system.service.GoodsService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -35,37 +32,77 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
     private GoodsMapper goodsMapper;
 
     @Override
-    public List<Goods> getAllGoods(Integer shopId) {
+    public Result<?> getAllGoods(Integer shopId) {
+        Page<Goods> page = new Page<>(1, 10);
+
+        // 构建查询条件，筛选出指定商店 ID 的商品
         LambdaQueryWrapper<Goods> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Goods::getShopId, shopId);
-        return goodsMapper.selectList(queryWrapper);
+
+        // 执行分页查询
+        IPage<Goods> goodsPage = goodsMapper.selectPage(page, queryWrapper);
+
+        return Result.success(goodsPage);
     }
 
     @Override
-    public List<Goods> getSaleGoods(Integer shopId) {
+    public Result<?> getSaleGoods(Integer shopId) {
+        Page<Goods> page = new Page<>(1, 10);
+
+        // 构建查询条件，筛选出指定商店 ID 的商品
         LambdaQueryWrapper<Goods> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Goods::getShopId, shopId);
-        List<Goods> goods = goodsMapper.selectList(queryWrapper);
-        return goods.stream()
-                .filter(order -> order.getStock() != 0)
-                .collect(Collectors.toList());
+        queryWrapper.eq(Goods::getShopId, shopId).gt(Goods::getStock, 0);
+
+        // 执行分页查询
+        IPage<Goods> goodsPage = goodsMapper.selectPage(page, queryWrapper);
+
+        return Result.success(goodsPage);
     }
 
     @Override
-    public List<Goods> getSoldOutGoods(Integer shopId) {
+    public Result<?> getSoldOutGoods(Integer shopId) {
+        Page<Goods> page = new Page<>(1, 10);
+
+        // 构建查询条件，筛选出指定商店 ID 且库存为 0 的商品
         LambdaQueryWrapper<Goods> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Goods::getShopId, shopId);
-        List<Goods> goods = goodsMapper.selectList(queryWrapper);
-        return goods.stream()
-                .filter(order -> order.getStock() == 0)
-                .collect(Collectors.toList());
+        queryWrapper.eq(Goods::getShopId, shopId).eq(Goods::getStock, 0);
+
+        // 执行分页查询
+        IPage<Goods> goodsPage = goodsMapper.selectPage(page, queryWrapper);
+
+        return Result.success(goodsPage);
     }
 
     @Override
-    public String updateGood(Integer itemId, Goods good, String imgPath) {
+    public Result<?> addGoods(Goods good, String imagePath) {
+        try {
+            good.setImg(imagePath);
+            goodsMapper.insert(good);
+            return Result.success("添加商品成功！");
+        } catch (Exception e) {
+            throw new ShopException("添加商品失败！");
+        }
+    }
+
+    @Override
+    public Result<?> deleteGood(Integer itemId) {
+        // 没有对应的商品
+        if (goodsMapper.selectById(itemId) == null) {
+            throw new ShopNoGoodException("该商品不存在！");
+        }
+        goodsMapper.deleteById(itemId);
+        return Result.success("商品删除成功");
+    }
+
+    @Override
+    public Result<?> updateGood(Integer itemId, Goods good, String imgPath) {
+        // 没有对应的商品
+        if (goodsMapper.selectById(itemId) == null) {
+            throw new ShopNoGoodException("该商品不存在！");
+        }
         good.setImg(imgPath);
         goodsMapper.updateById(good);
-        return "编辑成功";
+        return Result.success("商品更新成功！");
     }
 
 
