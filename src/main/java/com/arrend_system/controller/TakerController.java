@@ -36,7 +36,7 @@ public class TakerController {
     }
 
     // 设置订单为已送达
-    @PutMapping("/{order_id}")
+    @PutMapping("/updateOrder/{order_id}")
     public Result<?> updateOrder(@PathVariable Integer order_id) {
         return takerService.updateOrder(order_id);
     }
