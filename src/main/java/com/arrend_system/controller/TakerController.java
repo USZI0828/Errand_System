@@ -35,6 +35,12 @@ public class TakerController {
         return takerService.getChoseOrders(order_taker);
     }
 
+    // 设置订单为已送达
+    @PutMapping("/{order_id}")
+    public Result<?> updateOrder(@PathVariable Integer order_id) {
+        return takerService.updateOrder(order_id);
+    }
+
     // 计算收入明细
     @GetMapping("/countMoney")
     public Result<?> countMoney(@PathVariable Integer order_taker) {

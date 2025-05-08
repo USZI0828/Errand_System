@@ -88,5 +88,13 @@ public class TakerServiceImpl extends ServiceImpl<TakerMapper, User> implements 
         return Result.success(money);
     }
 
+    @Override
+    public Result<?> updateOrder(Integer orderId) {
+        Orders order = ordersMapper.selectById(orderId);
+        order.setStatus(3);
+        ordersMapper.updateById(order);
+        return Result.success("订单已送达！");
+    }
+
 
 }
