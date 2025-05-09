@@ -16,4 +16,8 @@ public interface TakerService extends IService<User> {
     Result<?> countMoney(Integer orderTaker);
 
     Result<?> updateOrder(Integer orderId);
+
+    Result<?> getOngoingOrders(Integer orderTaker);
+
+    Result<?> getHistoryOrders(Integer orderTaker);
 }

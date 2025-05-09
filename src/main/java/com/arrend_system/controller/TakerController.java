@@ -35,6 +35,18 @@ public class TakerController {
         return takerService.getChoseOrders(order_taker);
     }
 
+    // 查询自己进行中的订单
+    @GetMapping("/getOngoingOrders")
+    public Result<?> getOngoingOrders(@PathVariable Integer order_taker) {
+        return takerService.getOngoingOrders(order_taker);
+    }
+
+    // 查询自己已完成的订单
+    @GetMapping("/getHistoryOrders")
+    public Result<?> getHistoryOrders(@PathVariable Integer order_taker) {
+        return takerService.getHistoryOrders(order_taker);
+    }
+
     // 设置订单为已送达
     @PutMapping("/updateOrder/{order_id}")
     public Result<?> updateOrder(@PathVariable Integer order_id) {
