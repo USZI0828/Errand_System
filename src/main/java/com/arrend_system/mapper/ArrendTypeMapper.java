@@ -2,6 +2,9 @@ package com.arrend_system.mapper;
 
 import com.arrend_system.pojo.entity.ArrendType;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
 * @author 张明阳
@@ -10,6 +13,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity genertor.entity.ArrendType
 */
 public interface ArrendTypeMapper extends BaseMapper<ArrendType> {
+
+    @Select("select * from arrend_type")
+    List<ArrendType> getList();
 
 }
 

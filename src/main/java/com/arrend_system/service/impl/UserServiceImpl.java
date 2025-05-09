@@ -1,16 +1,14 @@
 package com.arrend_system.service.impl;
 
 import com.arrend_system.common.Result;
-import com.arrend_system.exception.UserException.CodeExpiredException;
-import com.arrend_system.exception.UserException.EmailUsedException;
-import com.arrend_system.exception.UserException.UserDeletedException;
-import com.arrend_system.exception.UserException.UserExitedException;
+import com.arrend_system.exception.UserException.*;
 import com.arrend_system.mapper.UserPermMapper;
 import com.arrend_system.pojo.entity.User;
 import com.arrend_system.mapper.UserMapper;
 import com.arrend_system.pojo.entity.UserPerm;
 import com.arrend_system.pojo.form.LoginForm;
 import com.arrend_system.pojo.form.RegisterForm;
+import com.arrend_system.pojo.form.update.UpdateUserForm;
 import com.arrend_system.pojo.vo.UserInfoVo;
 import com.arrend_system.service.SecretService;
 import com.arrend_system.service.UserService;
@@ -150,6 +148,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public Result<?> getUserInfo(String userName) {
         UserInfoVo userInfo = userMapper.findUserByName(userName);
         return Result.success(userInfo);
+    }
+
+    @Override
+    public Result<?> updateUserInfo(UpdateUserForm updateUserForm) {
+        User user = userMapper.selectById(updateUserForm.getUId());
+        if (user == null){
+            throw new UserNoExistedException();
+        }
+        userMapper.updateUserInfoById(updateUserForm);
+        return Result.success("信息修改成功");
     }
 }
 

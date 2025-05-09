@@ -13,6 +13,28 @@
         <id column="perm_id" property="permId"/>
     </resultMap>
 
+    <update id="updateUserInfoById">
+        update user
+        <set>
+            <if test="name != null and name.trim() != ''">
+                name = #{name},
+            </if>
+            <if test="username != null and username.trim() != ''">
+                username = #{username},
+            </if>
+            <if test="email != null and email.trim() != ''">
+                email = #{email},
+            </if>
+            <if test="phone != null and phone.trim() != ''">
+                phone = #{phone},
+            </if>
+            <if test="avatar != null and avatar.trim() != ''">
+                avatar = #{avatar},
+            </if>
+        </set>
+        where user_id = #{uId}
+    </update>
+
     <select id="findUserByUsername" resultMap="userResultMap">
         select *
         from user

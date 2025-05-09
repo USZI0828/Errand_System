@@ -2,7 +2,9 @@ package com.arrend_system.mapper;
 
 import com.arrend_system.pojo.entity.Orders;
 import com.arrend_system.pojo.query.OrdersQuery;
+import com.arrend_system.pojo.vo.GoodsVo;
 import com.arrend_system.pojo.vo.OrdersVo;
+import com.arrend_system.pojo.vo.ShopInfoVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +20,10 @@ import java.util.List;
 public interface OrdersMapper extends BaseMapper<Orders> {
 
     Page<OrdersVo> queryOrderList(Page<OrdersVo> page, @Param("query") OrdersQuery query);
+
+    List<ShopInfoVo> getShop();
+
+    List<GoodsVo> getGoodsList(@Param("shopId") Integer shopId);
 }
 
 

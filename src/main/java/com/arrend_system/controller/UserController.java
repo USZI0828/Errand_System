@@ -3,6 +3,7 @@ package com.arrend_system.controller;
 import com.arrend_system.common.Result;
 import com.arrend_system.pojo.form.LoginForm;
 import com.arrend_system.pojo.form.RegisterForm;
+import com.arrend_system.pojo.form.update.UpdateUserForm;
 import com.arrend_system.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,5 +42,10 @@ public class UserController {
         return userService.getUserInfo(userName);
     }
 
+    @Operation(summary = "根据用户id修改用户信息")
+    @PutMapping("/updateUserInfo")
+    public Result<?> updateUserInfo(@RequestBody UpdateUserForm updateUserForm) {
+        return userService.updateUserInfo(updateUserForm);
+    }
 
 }

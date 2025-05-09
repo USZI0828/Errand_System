@@ -19,6 +19,15 @@
             <result property="description" column="description"/>
     </resultMap>
 
+        <resultMap id="goodsVoResultMap" type="com.arrend_system.pojo.vo.GoodsVo">
+                <!-- GoodsVo 属性映射 -->
+                <id column="item_id" property="itemId" />
+                <result column="item_name" property="itemName" />
+                <result column="description" property="description"/>
+                <result column="type_name" property="categoryName" />
+                <result column="price" property="price" />
+        </resultMap>
+
         <select id="queryOrderList" resultType="com.arrend_system.pojo.vo.OrdersVo">
                 select o.order_id, o.title, t.type_name as order_type,
                 a.address_id, a.user_id, a.consignee, a.detail_address, a.area, a.phone, a.label, a.longitude, a.latitude,
@@ -52,6 +61,18 @@
                                 and o.create_time &lt;= #{query.endTime}
                         </if>
                 </where>
+        </select>
+
+    <select id="getShop" resultType="com.arrend_system.pojo.vo.ShopInfoVo">
+            select shop_id as shopId,shop_name as shopName from shop;
+    </select>
+        <select id="getGoodsList" resultMap="goodsVoResultMap">
+                select
+                g.item_id, g.item_name, g.img, g.price, g.sales, g.unit, g.stock,g.description,
+                goods_type.type_name
+                from goods g
+                left join goods_type on g.item_type = goods_type.id
+                where g.shop_id=#{shopId}
         </select>
 
 </mapper>

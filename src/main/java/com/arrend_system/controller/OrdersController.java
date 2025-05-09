@@ -6,6 +6,7 @@ import com.arrend_system.pojo.form.add.AddOrderForm;
 import com.arrend_system.pojo.query.OrdersQuery;
 import com.arrend_system.service.OrdersService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.simpleframework.xml.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,27 @@ public class OrdersController {
     @PostMapping("/cancelArrend")
     public Result<?>cancelArrend(@RequestParam("ordersId")Integer ordersId){
         return ordersService.cancelArrend(ordersId);
+    }
+
+    //用户获取商店列表
+    @Operation(summary = "用户获取商店列表")
+    @GetMapping("/getShopList")
+    public Result<?>getShopList() {
+        return ordersService.getShopList();
+    }
+
+    //用户查看商品列表
+    @Operation(summary = "用户获取商品列表")
+    @GetMapping("/getGoodsList")
+    public Result<?>getGoodsList(@Parameter Integer shopId) {
+        return ordersService.getGoodsByShop(shopId);
+    }
+
+    //获取跑腿类型
+    @Operation(summary = "用户获取跑腿类型")
+    @GetMapping("/getArrendType")
+    public Result<?>getArrendType(){
+        return ordersService.getArrendType();
     }
 
 }

@@ -4,6 +4,7 @@ import com.arrend_system.common.Result;
 import com.arrend_system.pojo.entity.User;
 import com.arrend_system.pojo.form.LoginForm;
 import com.arrend_system.pojo.form.RegisterForm;
+import com.arrend_system.pojo.form.update.UpdateUserForm;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -21,4 +22,6 @@ public interface UserService extends IService<User> {
     Result<?> register(RegisterForm registerForm);
 
     Result<?> getUserInfo(String userName);
+
+    Result<?> updateUserInfo(UpdateUserForm updateUserForm);
 }
