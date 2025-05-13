@@ -3,16 +3,20 @@ package com.arrend_system.service.impl;
 import com.arrend_system.common.Result;
 import com.arrend_system.exception.OrderException.CompletedOrderException;
 import com.arrend_system.exception.OrderException.NoEnoughCountException;
+import com.arrend_system.mapper.ArrendTypeMapper;
 import com.arrend_system.mapper.GoodsMapper;
 import com.arrend_system.mapper.UserMapper;
 import com.arrend_system.pojo.delayed.AutoOrder;
+import com.arrend_system.pojo.entity.ArrendType;
 import com.arrend_system.pojo.entity.Goods;
 import com.arrend_system.pojo.entity.Orders;
 import com.arrend_system.mapper.OrdersMapper;
 import com.arrend_system.pojo.entity.User;
 import com.arrend_system.pojo.form.add.AddOrderForm;
 import com.arrend_system.pojo.query.OrdersQuery;
+import com.arrend_system.pojo.vo.GoodsVo;
 import com.arrend_system.pojo.vo.OrdersVo;
+import com.arrend_system.pojo.vo.ShopInfoVo;
 import com.arrend_system.service.OrdersService;
 import com.arrend_system.utils.JsonUtil;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -47,6 +51,9 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
 
     @Autowired
     private GoodsMapper goodsMapper;
+
+    @Autowired
+    private ArrendTypeMapper arrendTypeMapper;
 
     @Override
     public Result<?> publish(AddOrderForm addOrderForm) {
@@ -128,6 +135,24 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
         orders.setFinishTime(LocalDateTime.now());
         ordersMapper.updateById(orders);
         return Result.success("取消订单成功");
+    }
+
+    @Override
+    public Result<?> getShopList() {
+        List<ShopInfoVo> shopInfoVoList = ordersMapper.getShop();
+        return Result.success(shopInfoVoList);
+    }
+
+    @Override
+    public Result<?> getGoodsByShop(Integer shopId) {
+        List<GoodsVo> goodsVoList = ordersMapper.getGoodsList(shopId);
+        return Result.success(goodsVoList);
+    }
+
+    @Override
+    public Result<?> getArrendType() {
+       List<ArrendType> list =  arrendTypeMapper.getList();
+       return Result.success(list);
     }
 }
 

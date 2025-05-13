@@ -1,6 +1,7 @@
 package com.arrend_system.mapper;
 
 import com.arrend_system.pojo.entity.User;
+import com.arrend_system.pojo.form.update.UpdateUserForm;
 import com.arrend_system.pojo.vo.UserInfoVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.data.repository.query.Param;
@@ -22,6 +23,8 @@ public interface UserMapper extends BaseMapper<User> {
     UserInfoVo findUserByName(@Param("userName")String userName);
 
     BigDecimal findCountById(@Param("userId") Integer publisher);
+
+    void updateUserInfoById(UpdateUserForm updateUserForm);
 }
 
 

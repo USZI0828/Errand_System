@@ -18,4 +18,11 @@ public interface OrdersService extends IService<Orders> {
     Result<?> getList(OrdersQuery ordersQuery);
 
     Result<?> cancelArrend(Integer ordersId);
+
+    Result<?> getShopList();
+
+    Result<?> getGoodsByShop(Integer shopId);
+
+    Result<?> getArrendType();
+
 }

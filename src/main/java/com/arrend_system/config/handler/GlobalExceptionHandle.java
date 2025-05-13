@@ -3,10 +3,7 @@ package com.arrend_system.config.handler;
 import com.arrend_system.common.Result;
 import com.arrend_system.exception.OrderException.CompletedOrderException;
 import com.arrend_system.exception.OrderException.NoEnoughCountException;
-import com.arrend_system.exception.UserException.CodeExpiredException;
-import com.arrend_system.exception.UserException.EmailUsedException;
-import com.arrend_system.exception.UserException.UserDeletedException;
-import com.arrend_system.exception.UserException.UserExitedException;
+import com.arrend_system.exception.UserException.*;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -46,6 +43,11 @@ public class GlobalExceptionHandle {
     @ExceptionHandler(UserExitedException.class)
     public Result<?> UserExitedException() {
         return Result.fail(104,"用户已存在",null);
+    }
+
+    @ExceptionHandler(UserNoExistedException.class)
+    public Result<?> UserNoExistedException() {
+        return Result.fail(105,"用户不存在",null);
     }
 
     @ExceptionHandler(NoEnoughCountException.class)
