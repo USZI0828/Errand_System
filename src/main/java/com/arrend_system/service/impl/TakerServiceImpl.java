@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,11 +41,6 @@ public class TakerServiceImpl extends ServiceImpl<TakerMapper, User> implements 
 
     @Override
     public Result<?> chooseOrders(Integer order_id, Integer order_taker) {
-        // 分页查询订单列表
-        Page<Orders> page = new Page<>(1, 10);
-        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
-        IPage<Orders> ordersPage = ordersMapper.selectPage(page, queryWrapper);
-
         synchronized (lock) {
             Orders orders = ordersMapper.selectById(order_id);
             if (orders == null) {
@@ -57,9 +53,7 @@ public class TakerServiceImpl extends ServiceImpl<TakerMapper, User> implements 
             orders.setStatus(2);
             ordersMapper.updateById(orders);
         }
-
-        // 将分页查询结果和订单接取结果一起封装返回
-        return Result.success(new Object[]{ordersPage, "接取订单成功"});
+        return Result.success("接取订单成功！");
     }
 
     @Override
@@ -86,6 +80,38 @@ public class TakerServiceImpl extends ServiceImpl<TakerMapper, User> implements 
             }
         }
         return Result.success(money);
+    }
+
+    @Override
+    public Result<?> updateOrder(Integer orderId) {
+        Orders order = ordersMapper.selectById(orderId);
+        order.setStatus(3);
+        ordersMapper.updateById(order);
+        return Result.success("订单已送达！");
+    }
+
+    @Override
+    public Result<?> getOngoingOrders(Integer orderTaker) {
+        Page<Orders> page = new Page<>(1, 10);
+        // 创建查询条件
+        LambdaQueryWrapper<Orders> lqw = new LambdaQueryWrapper<>();
+        // 查询对应跑腿员id和状态码为2的订单
+        lqw.eq(Orders::getOrderTaker, orderTaker).eq(Orders::getStatus, 2);
+        // 执行分页查询
+        IPage<Orders> ordersPage = ordersMapper.selectPage(page, lqw);
+        return Result.success(ordersPage);
+    }
+
+    @Override
+    public Result<?> getHistoryOrders(Integer orderTaker) {
+        Page<Orders> page = new Page<>(1, 10);
+        // 创建查询条件
+        LambdaQueryWrapper<Orders> lqw = new LambdaQueryWrapper<>();
+        // 查询对应跑腿员id和状态码为3的订单
+        lqw.eq(Orders::getOrderTaker, orderTaker).eq(Orders::getStatus, 3);
+        // 执行分页查询
+        IPage<Orders> ordersPage = ordersMapper.selectPage(page, lqw);
+        return Result.success(ordersPage);
     }
 
 
