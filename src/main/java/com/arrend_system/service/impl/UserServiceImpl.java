@@ -32,6 +32,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -135,7 +136,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             //将用户信息存入数据库
             User newUser = new User(registerForm.getUsername(),
                     passwordEncoder.encode(registerForm.getPassword()),
-                    registerForm.getEmail());
+                    registerForm.getEmail(), BigDecimal.ZERO);
             userMapper.insert(newUser);
             UserPerm up = new UserPerm(null, newUser.getUserId(), registerForm.getPermId());
             upMapper.insert(up);
