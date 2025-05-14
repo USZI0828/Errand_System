@@ -130,9 +130,10 @@ public class User implements Serializable, UserDetails {
         return deleteFlag == 0;
     }
 
-    public User(String username, String password, String email) {
+    public User(String username, String password, String email,BigDecimal count) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.count = count;
     }
 }
