@@ -102,4 +102,8 @@ public class Orders implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    // 添加地址关联字段（使用 @TableField(exist = false) 标记非数据库字段）
+    @TableField(exist = false)
+    private Address address; // 地址对象
 }
