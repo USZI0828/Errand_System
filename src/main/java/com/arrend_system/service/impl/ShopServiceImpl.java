@@ -171,6 +171,13 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop>
         }
     }
 
+    @Override
+    public Result<?> getShopInfo(Integer userId) {
+        LambdaQueryWrapper<Shop> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Shop::getUserId, userId);
+        Shop shop = shopMapper.selectOne(lqw);
+        return Result.success(shop);
+    }
 
 
     @Override

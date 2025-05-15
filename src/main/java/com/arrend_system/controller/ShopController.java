@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/{shop_id}")
+@RequestMapping("/shop/{user_id}")
 public class ShopController {
 
     @Autowired
@@ -35,6 +35,12 @@ public class ShopController {
     @Autowired
     private MinioClient minioClient;
 
+    // 获取商店信息
+    @GetMapping("/getShopInfo")
+    public Result<?> getShopInfo(@PathVariable Integer user_id) {
+        return shopService.getShopInfo(user_id);
+    }
+
     // 修改商店信息
     @PutMapping("/updateShop")
     public Result<?> updateShop(@RequestBody Shop shop) {
@@ -42,43 +48,43 @@ public class ShopController {
     }
 
     // 查询全部订单
-    @GetMapping("/getAllOrders")
+    @GetMapping("/getAllOrders/{shop_id}")
     public Result<?> getAllOrders(@PathVariable Integer shop_id) {
         return shopService.getAllOrders(shop_id);
     }
 
     // 查询待接单订单
-    @GetMapping("/getWaitingOrders")
+    @GetMapping("/getWaitingOrders/{shop_id}")
     public Result<?> getWaitingOrders(@PathVariable Integer shop_id) {
         return shopService.getWaitingOrders(shop_id);
     }
 
     // 查询进行中订单
-    @GetMapping("/getGoingOrders")
+    @GetMapping("/getGoingOrders/{shop_id}")
     public Result<?> getGoingOrders(@PathVariable Integer shop_id) {
         return shopService.getGoingOrders(shop_id);
     }
 
     // 查询已完成订单
-    @GetMapping("/getFinishedOrders")
+    @GetMapping("/getFinishedOrders/{shop_id}")
     public Result<?> getFinishedOrders(@PathVariable Integer shop_id) {
         return shopService.getFinishedOrders(shop_id);
     }
 
     // 查询全部商品
-    @GetMapping("/getAllGoods")
+    @GetMapping("/getAllGoods/{shop_id}")
     public Result<?> getAllGoods(@PathVariable Integer shop_id) {
         return goodsService.getAllGoods(shop_id);
     }
 
     // 查询库存还有的商品
-    @GetMapping("/getSaleGoods")
+    @GetMapping("/getSaleGoods/{shop_id}")
     public Result<?> getSaleGoods(@PathVariable Integer shop_id) {
         return goodsService.getSaleGoods(shop_id);
     }
 
     // 查询库存没有的商品
-    @GetMapping("/getSoldOutGoods")
+    @GetMapping("/getSoldOutGoods/{shop_id}")
     public Result<?> getSoldOutGoods(@PathVariable Integer shop_id) {
         return goodsService.getSoldOutGoods(shop_id);
     }
