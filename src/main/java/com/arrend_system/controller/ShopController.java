@@ -36,7 +36,7 @@ public class ShopController {
     private MinioClient minioClient;
 
     // 获取商店信息
-    @PutMapping("/getShopInfo")
+    @GetMapping("/getShopInfo")
     public Result<?> getShopInfo(@PathVariable Integer user_id) {
         return shopService.getShopInfo(user_id);
     }
