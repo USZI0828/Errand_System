@@ -46,4 +46,8 @@ public class Shop implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    public Shop(Integer UserId) {
+        this.userId = UserId;
+    }
 }
