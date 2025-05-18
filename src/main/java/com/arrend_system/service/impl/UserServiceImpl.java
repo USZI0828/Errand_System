@@ -2,7 +2,9 @@ package com.arrend_system.service.impl;
 
 import com.arrend_system.common.Result;
 import com.arrend_system.exception.UserException.*;
+import com.arrend_system.mapper.ShopMapper;
 import com.arrend_system.mapper.UserPermMapper;
+import com.arrend_system.pojo.entity.Shop;
 import com.arrend_system.pojo.entity.User;
 import com.arrend_system.mapper.UserMapper;
 import com.arrend_system.pojo.entity.UserPerm;
@@ -60,6 +62,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ShopMapper shopMapper;
 
     @Autowired
     private JavaMailSender mailSender;
@@ -137,9 +142,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             User newUser = new User(registerForm.getUsername(),
                     passwordEncoder.encode(registerForm.getPassword()),
                     registerForm.getEmail(), BigDecimal.ZERO);
-            userMapper.insert(newUser);
+            int insert = userMapper.insert(newUser);
             UserPerm up = new UserPerm(null, newUser.getUserId(), registerForm.getPermId());
             upMapper.insert(up);
+            if (registerForm.getPermId() == 2) {
+                //注册的是商家，新增一条商店的信息
+                Shop shop = new Shop(insert);
+                shopMapper.insert(shop);
+            }
             return Result.success("注册成功");
         }
         return Result.fail(300,"验证码错误",null);

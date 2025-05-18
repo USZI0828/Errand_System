@@ -76,7 +76,8 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders>
                 LocalDateTime.now(),
                 null,
                 addOrderForm.getItemList(),
-                addOrderForm.getDescription()
+                addOrderForm.getDescription(),
+                null
         );
         ordersMapper.insert(orders);
         return Result.success("任务发布成功，等待管理员审核");

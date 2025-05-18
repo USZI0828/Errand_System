@@ -4,6 +4,8 @@ import com.arrend_system.pojo.entity.User;
 import com.arrend_system.pojo.form.update.UpdateUserForm;
 import com.arrend_system.pojo.vo.UserInfoVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
@@ -25,6 +27,10 @@ public interface UserMapper extends BaseMapper<User> {
     BigDecimal findCountById(@Param("userId") Integer publisher);
 
     void updateUserInfoById(UpdateUserForm updateUserForm);
+
+    @Insert("INSERT INTO user (username, password, email,count) VALUES (#{username}, #{password}, #{email}, #{count})")
+    @Options(useGeneratedKeys = true, keyProperty = "uId") // 自动生成主键
+    int insert(User user);
 }
 
 

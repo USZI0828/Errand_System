@@ -31,6 +31,9 @@
             <if test="avatar != null and avatar.trim() != ''">
                 avatar = #{avatar},
             </if>
+            <if test="count != null and count.trim() != ''">
+                count = #{count},
+            </if>
         </set>
         where user_id = #{uId}
     </update>
