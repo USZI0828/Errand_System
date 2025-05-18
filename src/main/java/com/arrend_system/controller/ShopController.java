@@ -53,6 +53,14 @@ public class ShopController {
         return shopService.getAllOrders(shop_id);
     }
 
+
+    // 查询已取消订单
+    @GetMapping("/getUndoOrders/{shop_id}")
+    public Result<?> getUndoOrders(@PathVariable Integer shop_id) {
+        return shopService.getUndoOrders(shop_id);
+    }
+
+
     // 查询待接单订单
     @GetMapping("/getWaitingOrders/{shop_id}")
     public Result<?> getWaitingOrders(@PathVariable Integer shop_id) {
