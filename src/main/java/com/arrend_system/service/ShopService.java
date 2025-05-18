@@ -23,4 +23,6 @@ public interface ShopService extends IService<Shop> {
     Result<?> getGoingOrders(Integer shopId);
 
     Result<?> getShopInfo(Integer userId);
+
+    Result<?> getUndoOrders(Integer shopId);
 }

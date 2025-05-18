@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -256,6 +257,7 @@ public class TakerServiceImpl extends ServiceImpl<TakerMapper, User> implements 
     public Result<?> updateOrder(Integer orderId) {
         Orders order = ordersMapper.selectById(orderId);
         order.setStatus(3);
+        order.setFinishTime(LocalDateTime.now());
         ordersMapper.updateById(order);
         return Result.success("订单已送达！");
     }
