@@ -13,6 +13,7 @@ import com.arrend_system.pojo.entity.User;
 import com.arrend_system.pojo.vo.OrdersVo;
 import com.arrend_system.service.TakerService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -21,6 +22,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -126,34 +128,39 @@ public class TakerServiceImpl extends ServiceImpl<TakerMapper, User> implements 
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.READ_COMMITTED)
     public Result<?> chooseOrders(Integer order_id, Integer order_taker) {
-        // 创建要更新的订单对象
+        // 1. 先查询订单当前状态（添加行锁 for update）
+        Orders existingOrder = ordersMapper.selectOne(
+                new QueryWrapper<Orders>()
+                        .eq("order_id", order_id)
+                        .eq("status", 1)
+                        .last("for update") // 添加行锁，确保当前事务处理期间订单不会被其他事务修改
+        );
+
+        if (existingOrder == null) {
+            return Result.fail(400, "订单不存在或已被接取！", "");
+        }
+
+        // 2. 创建要更新的订单对象
         Orders order = new Orders();
         order.setOrderId(order_id);
         order.setOrderTaker(order_taker);
-        order.setStatus(2);
+        order.setStatus(2); // 进行中状态
 
-        // 设置乐观锁条件：订单状态必须为1（可接取）
+        // 3. 设置严格的更新条件（双重校验）
         UpdateWrapper<Orders> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("status", 1);
+        updateWrapper.eq("order_id", order_id)
+                .eq("status", 1); // 确保状态仍然是可接取
 
-        // 执行更新并检查影响行数
+        // 4. 执行更新并检查影响行数
         int rows = ordersMapper.update(order, updateWrapper);
 
-        // 根据更新结果返回相应信息
+        // 5. 根据更新结果返回相应信息
         if (rows > 0) {
             return Result.success("接取订单成功！");
         } else {
-            // 查询订单以获取更详细的失败原因
-            Orders existingOrder = ordersMapper.selectById(order_id);
-            if (existingOrder == null) {
-                return Result.fail(400, "订单不存在！", "");
-            } else if (existingOrder.getStatus() != 1) {
-                return Result.fail(400, "订单状态已变更，无法接取！", existingOrder.getStatus());
-            } else {
-                return Result.fail(500, "系统繁忙，请稍后再试！", "");
-            }
+            return Result.fail(400, "订单已被他人接取！", "");
         }
     }
 
