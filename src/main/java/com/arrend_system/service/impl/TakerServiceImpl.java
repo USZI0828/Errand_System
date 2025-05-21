@@ -2,10 +2,7 @@ package com.arrend_system.service.impl;
 
 import com.arrend_system.common.Result;
 import com.arrend_system.exception.TakerException.TakeOrderException;
-import com.arrend_system.mapper.AddressMapper;
-import com.arrend_system.mapper.GoodsMapper;
-import com.arrend_system.mapper.OrdersMapper;
-import com.arrend_system.mapper.TakerMapper;
+import com.arrend_system.mapper.*;
 import com.arrend_system.pojo.entity.Address;
 import com.arrend_system.pojo.entity.Goods;
 import com.arrend_system.pojo.entity.Orders;
@@ -41,6 +38,9 @@ public class TakerServiceImpl extends ServiceImpl<TakerMapper, User> implements 
 
     @Autowired
     private GoodsMapper goodsMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     private static final Object lock = new Object();
 
@@ -262,7 +262,20 @@ public class TakerServiceImpl extends ServiceImpl<TakerMapper, User> implements 
 
     @Override
     public Result<?> updateOrder(Integer orderId) {
+        if (orderId == null) {
+            return Result.fail(500,"订单ID不能为空","");
+        }
         Orders order = ordersMapper.selectById(orderId);
+        if (order == null) {
+            return Result.fail(500,"订单不存在","");
+        }
+
+        User user = userMapper.selectById(order.getOrderTaker());
+        if (user == null) {
+            return Result.fail(500,"配送员不存在","");
+        }
+        user.setCount(user.getCount().add(order.getCost()));
+        userMapper.updateById(user);
         order.setStatus(3);
         order.setFinishTime(LocalDateTime.now());
         ordersMapper.updateById(order);
